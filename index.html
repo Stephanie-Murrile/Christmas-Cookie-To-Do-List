@@ -25,9 +25,15 @@ justify-content:center;
 align-items:flex-start;
 
 /* BACKGROUND */
-background:url("background.jpg") center/cover no-repeat fixed;
-
+background:url("background.jpg") center center / cover no-repeat fixed;
 overflow-x:hidden;
+}
+
+/* Fix mobile background bug */
+@media (max-width: 900px){
+body{
+background-attachment: scroll;
+}
 }
 
 /* Layout */
@@ -238,7 +244,6 @@ font-size:24px;
 
 <div class="layout">
 
-<!-- TASKS -->
 <div class="box">
 <div class="panelIcon">🍪</div>
 <h2>Tasks</h2>
@@ -251,7 +256,6 @@ font-size:24px;
 <ul id="list"></ul>
 </div>
 
-<!-- NOTES -->
 <div class="box">
 <div class="panelIcon">⭐</div>
 <h2>Notes</h2>
@@ -268,7 +272,6 @@ font-size:24px;
 </div>
 
 <script>
-
 let tasks = JSON.parse(localStorage.getItem("t") || "[]")
 let notes = JSON.parse(localStorage.getItem("n") || "[]")
 
@@ -334,11 +337,7 @@ addNote()
 }
 
 function addNote(){
-notes.push({
-id: Date.now(),
-t: ""
-})
-
+notes.push({ id: Date.now(), t: "" })
 saveN()
 renderN()
 }
@@ -371,7 +370,6 @@ board.innerHTML += `
 
 render()
 renderN()
-
 </script>
 
 </body>
