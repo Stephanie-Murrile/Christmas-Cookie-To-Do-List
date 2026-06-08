@@ -69,4 +69,14 @@ https://www.vecteezy.com/png/9383725-homemade-tasty-cookies-clipart-design-illus
 
 ## License
 
-Free to use and modify for personal projects.
+Copyright (c) 2026 Stephanie-Murrile
+
+You may use, copy, modify, and distribute this project provided that:
+
+1. Credit is given to Stephanie-Murrile.
+2. A link to the original GitHub repository is included.
+3. Any modifications are clearly indicated.
+
+Failure to provide attribution voids this permission.
+
+Commercial use requires prior written permission.
