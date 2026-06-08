@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Christmas Productivity Board</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Baloo 2',cursive;
+min-height:100vh;
+padding:30px;
+
+display:flex;
+justify-content:center;
+align-items:flex-start;
+
+/* NEW BACKGROUND IMAGE */
+background:url("background.jpg") center/cover no-repeat fixed;
+
+overflow-x:hidden;
+}
+
+/* Layout */
+.layout{
+display:flex;
+gap:25px;
+align-items:flex-start;
+}
+
+/* Panels */
+.box{
+width:520px;
+background:#fffdf7;
+padding:25px;
+border-radius:36px;
+position:relative;
+box-shadow:0 12px 25px rgba(0,0,0,.15),
+inset 0 0 0 3px #d8c8a1;
+max-height:85vh;
+overflow:auto;
+}
+
+.panelIcon{
+position:absolute;
+top:10px;
+left:20px;
+font-size:65px;
+}
+
+h2{
+text-align:center;
+font-size:54px;
+color:#4a2200;
+margin-bottom:18px;
+}
+
+/* Inputs */
+.row{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+input[type=text]{
+flex:1;
+padding:14px;
+font-size:22px;
+font-family:inherit;
+border-radius:18px;
+border:2px solid #ddd;
+outline:none;
+}
+
+input[type=text]:focus{
+border-color:#6cbc7b;
+}
+
+button{
+border:none;
+cursor:pointer;
+font-family:inherit;
+font-size:20px;
+padding:12px 18px;
+border-radius:16px;
+background:#57af64;
+color:white;
+transition:.2s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+/* TASKS */
+ul{list-style:none;}
+
+li{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+margin-bottom:12px;
+background:white;
+border-radius:18px;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+font-size:24px;
+}
+
+li div{
+display:flex;
+gap:8px;
+}
+
+.done span{
+text-decoration:line-through;
+opacity:.45;
+}
+
+.taskDone{background:#7fd08a;}
+.taskDelete{background:#df5f5f;}
+
+/* NOTES */
+.notes{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+justify-content:center;
+}
+
+.note{
+width:200px;
+height:200px;
+
+position:relative;
+padding:20px;
+
+background-image:url("cookie.png");
+background-size:contain;
+background-repeat:no-repeat;
+background-position:center;
+
+filter:drop-shadow(0 8px 12px rgba(0,0,0,.15));
+border-radius:18px;
+
+overflow:hidden;
+}
+
+/* TEXT */
+.note textarea{
+width:100%;
+height:120px;
+
+border:none;
+outline:none;
+resize:none;
+
+background:transparent;
+
+font-family:inherit;
+font-size:22px;
+text-align:center;
+
+position:relative;
+z-index:1;
+
+color:#f5efe6;
+font-weight:700;
+
+text-shadow:
+0 2px 4px rgba(0,0,0,0.6),
+0 0 6px rgba(0,0,0,0.4);
+}
+
+/* DELETE BUTTON */
+.note button{
+position:absolute;
+top:8px;
+right:8px;
+width:28px;
+height:28px;
+padding:0;
+background:#d65d5d;
+z-index:1;
+}
+
+/* DECORATION (kept minimal) */
+.corner{
+position:fixed;
+font-size:50px;
+pointer-events:none;
+opacity:.9;
+}
+
+.c1{top:10px;left:10px;}
+.c2{top:10px;right:10px;}
+.c3{bottom:10px;left:10px;}
+.c4{bottom:10px;right:10px;}
+
+.cookieBtn{
+width:100%;
+font-size:24px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .box {
+    width: 95vw;
+    max-width: 500px;
+  }
+
+  h2 {
+    font-size: 38px;
+  }
+
+  .panelIcon {
+    font-size: 45px;
+  }
+
+  li {
+    font-size: 18px;
+  }
+
+  .note {
+    width: 160px;
+    height: 160px;
+  }
+
+  .note textarea {
+    font-size: 18px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="corner c1">🍭</div>
+<div class="corner c2">🎄</div>
+<div class="corner c3">🎁</div>
+<div class="corner c4">🍪</div>
+
+<div class="layout">
+
+<!-- TASKS -->
+<div class="box">
+<div class="panelIcon">🍪</div>
+<h2>Tasks</h2>
+
+<div class="row">
+<input id="task" placeholder="Add a new task...">
+<button onclick="addTask()">＋</button>
+</div>
+
+<ul id="list"></ul>
+</div>
+
+<!-- NOTES -->
+<div class="box">
+<div class="panelIcon">⭐</div>
+<h2>Notes</h2>
+
+<div class="row">
+<button id="cookieBtn" class="cookieBtn" onclick="cookieCut()">
+🍪 Add Cookie Note
+</button>
+</div>
+
+<div id="board" class="notes"></div>
+</div>
+
+</div>
+
+<script>
+
+let tasks = JSON.parse(localStorage.getItem("t") || "[]")
+let notes = JSON.parse(localStorage.getItem("n") || "[]")
+
+const list = document.getElementById("list")
+const board = document.getElementById("board")
+
+const save = () => localStorage.setItem("t", JSON.stringify(tasks))
+const saveN = () => localStorage.setItem("n", JSON.stringify(notes))
+
+/* TASKS */
+function addTask(){
+let i = document.getElementById("task")
+if(!i.value.trim()) return
+
+tasks.push({ id: Date.now(), t: i.value, d: false })
+i.value = ""
+
+save()
+render()
+}
+
+function toggle(id){
+tasks = tasks.map(x =>
+x.id == id ? {...x, d: !x.d} : x
+)
+save()
+render()
+}
+
+function del(id){
+tasks = tasks.filter(x => x.id != id)
+save()
+render()
+}
+
+function render(){
+list.innerHTML = ""
+
+tasks.forEach(t => {
+list.innerHTML += `
+<li class="${t.d ? 'done' : ''}">
+<span>${t.t}</span>
+<div>
+<button class="taskDone" onclick="toggle(${t.id})">✓</button>
+<button class="taskDelete" onclick="del(${t.id})">✕</button>
+</div>
+</li>
+`
+})
+}
+
+/* NOTES */
+function cookieCut(){
+const btn = document.getElementById("cookieBtn")
+
+btn.animate([
+{transform:"scale(1)"},
+{transform:"scale(.85) rotate(-5deg)"},
+{transform:"scale(1.1) rotate(5deg)"},
+{transform:"scale(1)"}
+],{duration:500})
+
+addNote()
+}
+
+function addNote(){
+notes.push({
+id: Date.now(),
+t: ""
+})
+
+saveN()
+renderN()
+}
+
+function upd(id,v){
+notes = notes.map(n =>
+n.id == id ? {...n, t:v} : n
+)
+saveN()
+}
+
+function delN(id){
+notes = notes.filter(n => n.id != id)
+saveN()
+renderN()
+}
+
+function renderN(){
+board.innerHTML = ""
+
+notes.forEach(n => {
+board.innerHTML += `
+<div class="note">
+<button onclick="delN(${n.id})">×</button>
+<textarea oninput="upd(${n.id},this.value)">${n.t}</textarea>
+</div>
+`
+})
+}
+
+render()
+renderN()
+
+</script>
+
+</body>
+</html>
