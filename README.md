@@ -21,7 +21,7 @@ Everything saves directly in your browser, so your tasks and notes are still the
 
 Check out how it works:
 
-![Demo](demo.mp4)
+- https://youtu.be/J4Ro4G3X-Es
 
 
 ---
