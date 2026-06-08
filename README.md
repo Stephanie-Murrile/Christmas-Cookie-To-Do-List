@@ -62,7 +62,8 @@ https://www.vecteezy.com/png/9383725-homemade-tasty-cookies-clipart-design-illus
 
 - Data is stored locally in your browser only  
 - No backend or database required  
-- Works offline once loaded  
+- Works offline once loaded
+- Best experience on Firefox (mobile and desktop). Other browsers may render spacing and layout slightly differently due to CSS handling differences.
 
 ---
 
